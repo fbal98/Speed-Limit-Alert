@@ -70,7 +70,6 @@
         function fetchSpeedLimit(position) {
             const lat = position.coords.latitude;
             const lon = position.coords.longitude;
-            console.log(lat, lon);
             const query = `
                 [out:json];
                 way(around:50,${lat},${lon})["maxspeed"];
@@ -79,7 +78,7 @@
             
             fetch('https://overpass-api.de/api/interpreter', {
                 method: 'POST',
-                body: query,
+                body: new URLSearchParams({ data: query }),
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
@@ -120,6 +119,7 @@
         // Call the function initially to fetch the speed limit on page load
         getLocationAndFetchSpeedLimit();
     </script>
+    
     
 </body>
 </html>
