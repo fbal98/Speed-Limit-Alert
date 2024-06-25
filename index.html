@@ -71,7 +71,7 @@
     <script>
         let lastPosition = null;
         let lastUpdatedTime = null;
-        const MIN_DISTANCE = 1000; // 1 km in meters
+        const MIN_DISTANCE = 500; // 1 km in meters
     
         function getLocationAndFetchSpeedLimit() {
             if (navigator.geolocation) {
@@ -118,7 +118,7 @@
             const lon = position.coords.longitude;
             const query = `
                 [out:json];
-                way(around:50,${lat},${lon})["maxspeed"];
+                way(around:10,${lat},${lon})["maxspeed"];
                 out body;
             `;
             
