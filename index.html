@@ -118,7 +118,7 @@
             const lon = position.coords.longitude;
             const query = `
                 [out:json];
-                way(around:10,${lat},${lon})["maxspeed"];
+                way(around:0,${lat},${lon})["maxspeed"];
                 out body;
             `;
             
