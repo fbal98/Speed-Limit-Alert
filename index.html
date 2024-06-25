@@ -50,16 +50,27 @@
         .button:active {
             background: #3b82f6;
         }
+        #last-updated {
+            margin-top: 5px;
+            color:#fff;
+            text-shadow: 0px 0px 20px #242526;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="title">Speed Limit Finder</div>
-        <div id="speed-limit">Loading...</div>
-        <button class="button" onclick="getLocationAndFetchSpeedLimit()">Refresh</button>
+    <div>
+        <div class="container">
+            <div class="title">Speed Limit Finder</div>
+            <div id="speed-limit">Loading...</div>
+            <button class="button" onclick="getLocationAndFetchSpeedLimit()">Refresh</button>
+        </div>
+        <center>
+        <div id="last-updated" >Last Updated: Never</div>
+        </center>
     </div>
     <script>
         let lastPosition = null;
+        let lastUpdatedTime = null;
         const MIN_DISTANCE = 1000; // 1 km in meters
     
         function getLocationAndFetchSpeedLimit() {
@@ -124,6 +135,7 @@
                 if (elements.length > 0) {
                     const speedLimit = elements[0].tags.maxspeed;
                     document.getElementById('speed-limit').textContent = `Speed Limit: ${speedLimit} km/h`;
+                    updateLastUpdatedTime();
                 } else {
                     document.getElementById('speed-limit').textContent = "Speed limit not found.";
                 }
@@ -151,9 +163,44 @@
             }
         }
     
+        function updateLastUpdatedTime() {
+            lastUpdatedTime = new Date();
+            setInterval(updateTimeAgo, 1000); // Update every second
+            updateTimeAgo(); // Initial call to set the time ago immediately
+        }
+    
+        function updateTimeAgo() {
+            if (lastUpdatedTime) {
+                const now = new Date();
+                const diffInSeconds = Math.floor((now - lastUpdatedTime) / 1000);
+                let timeAgo = '';
+    
+                if (diffInSeconds < 60) {
+                    timeAgo = `${diffInSeconds} second${diffInSeconds !== 1 ? 's' : ''} ago`;
+                } else if (diffInSeconds < 3600) {
+                    const minutes = Math.floor(diffInSeconds / 60);
+                    const seconds = diffInSeconds % 60;
+                    timeAgo = `${minutes} minute${minutes !== 1 ? 's' : ''} and ${seconds} second${seconds !== 1 ? 's' : ''} ago`;
+                } else if (diffInSeconds < 86400) {
+                    const hours = Math.floor(diffInSeconds / 3600);
+                    const minutes = Math.floor((diffInSeconds % 3600) / 60);
+                    timeAgo = `${hours} hour${hours !== 1 ? 's' : ''} and ${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
+                } else {
+                    const days = Math.floor(diffInSeconds / 86400);
+                    const hours = Math.floor((diffInSeconds % 86400) / 3600);
+                    timeAgo = `${days} day${days !== 1 ? 's' : ''} and ${hours} hour${hours !== 1 ? 's' : ''} ago`;
+                }
+    
+                document.getElementById('last-updated').textContent = `Last Updated: ${timeAgo}`;
+            }
+        }
+    
         // Start tracking the location and fetching speed limit
         getLocationAndFetchSpeedLimit();
     </script>
+    
+    
+    
     
     
     
